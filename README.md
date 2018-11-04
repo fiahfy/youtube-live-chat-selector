@@ -5,7 +5,7 @@
 
 
 ## Features
-* Filter messages added NG list.
+* Filter messages added on NG list.
 
 
 ## Screenshot

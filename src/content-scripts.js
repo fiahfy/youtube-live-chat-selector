@@ -1,20 +1,17 @@
 import Logger from './utils/logger'
-import Storage from './utils/storage'
+
+const id = chrome.runtime.id
 
 const ClassName = {
-  button: 'ylcfl-button',
-  mask: 'ylcfl-mask'
+  button: `${id}-button`,
+  mask: `${id}-mask`
 }
 
-let enabled = false
+let disabled
 let settings
 
-const loadSettings = async () => {
-  settings = (await Storage.get()).settings
-}
-
 const updateMessage = async (node) => {
-  if (!enabled) {
+  if (disabled) {
     const mask = node.querySelector(`.${ClassName.mask}`)
     if (mask) {
       mask.remove()
@@ -47,55 +44,56 @@ const updateMessages = () => {
   })
 }
 
-const setupControlButton = (enabled) => {
-  let iconButton = document.querySelector(`.${ClassName.button}`)
-  if (!iconButton) {
-    const header = document.querySelector('yt-live-chat-header-renderer')
+const setupControlButton = () => {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  path.setAttribute('d', 'M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z')
 
-    iconButton = document.createElement('yt-icon-button')
-    iconButton.classList.add(ClassName.button)
-    iconButton.classList.add('style-scope')
-    iconButton.classList.add('yt-live-chat-header-renderer')
-    iconButton.setAttribute(
-      'style',
-      `
-    width: 40px;
-    height: 40px;
-    padding: 8px;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', '0 0 24 24')
+  svg.setAttribute('width', '100%')
+  svg.setAttribute('height', '100%')
+  svg.append(path)
+
+  const icon = document.createElement('yt-icon')
+  icon.classList.add('style-scope')
+  icon.classList.add('yt-live-chat-header-renderer')
+  icon.append(svg)
+
+  const iconButton = document.createElement('button')
+  iconButton.setAttribute('id', 'button')
+  iconButton.classList.add('yt-icon-button')
+  iconButton.classList.add('style-scope')
+  iconButton.append(icon)
+
+  const button = document.createElement('yt-icon-button')
+  button.classList.add(ClassName.button)
+  button.classList.add('style-scope')
+  button.classList.add('yt-live-chat-header-renderer')
+  button.setAttribute(
+    'style',
     `
-    )
-
-    const button = document.createElement('button')
-    button.setAttribute('id', 'button')
-    button.classList.add('yt-icon-button')
-    button.classList.add('style-scope')
-
-    const icon = document.createElement('yt-icon')
-    icon.classList.add('style-scope')
-    icon.classList.add('yt-live-chat-header-renderer')
-
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    path.setAttribute('d', 'M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z')
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('viewBox', '0 0 24 24')
-    svg.setAttribute('width', '100%')
-    svg.setAttribute('height', '100%')
-    svg.append(path)
-
-    icon.append(svg)
-    button.append(icon)
-    iconButton.append(button)
-    header.append(iconButton)
-    // remove unnecessary button
-    iconButton.querySelector('#button').remove()
-    iconButton.onclick = () => {
-      chrome.runtime.sendMessage({ id: 'controlButtonClicked' })
-    }
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  `
+  )
+  button.onclick = () => {
+    chrome.runtime.sendMessage({ id: 'disabledToggled' })
   }
-  iconButton.style.color = enabled
-    ? '#569df2'
-    : 'var(--yt-live-chat-header-button-color)'
+  button.append(iconButton)
+
+  const header = document.querySelector('yt-live-chat-header-renderer')
+  header.append(button)
+
+  // remove unnecessary button
+  button.querySelector('#button').remove()
+}
+
+const updateControlButton = (disabled) => {
+  const button = document.querySelector(`.${ClassName.button}`)
+  button.style.color = disabled
+    ? 'var(--yt-live-chat-header-button-color)'
+    : '#569df2'
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -103,13 +101,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
   const { id, data } = message
   switch (id) {
-    case 'enabledChanged':
-      enabled = data.enabled
-      setupControlButton(enabled)
+    case 'disabledChanged':
+      disabled = data.disabled
+      updateControlButton(disabled)
       updateMessages()
       break
     case 'stateChanged':
-      await loadSettings()
+      settings = data.state.settings
       break
   }
 })
@@ -117,8 +115,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 Logger.log('content script loaded')
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadSettings()
-
   const style = document.createElement('style')
   style.innerText = `
   .${ClassName.mask} {
@@ -151,9 +147,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const items = document.querySelector('#items.yt-live-chat-item-list-renderer')
   observer.observe(items, { childList: true })
 
-  chrome.runtime.sendMessage({ id: 'contentLoaded' })
-
   window.addEventListener('unload', () => {
     observer.disconnect()
   })
+
+  setupControlButton()
+
+  chrome.runtime.sendMessage({ id: 'contentLoaded' })
 })
