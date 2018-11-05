@@ -1,161 +1,53 @@
 <template>
   <v-app>
     <v-content>
-      <v-container fluid>
-        <v-subheader class="pl-0">Color</v-subheader>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Guest</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="color"
-              class="color"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Member</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="memberColor"
-              class="color"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Moderator</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="moderatorColor"
-              class="color"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Owner</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="ownerColor"
-              class="color"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout
-          row
-          align-center
-        >
-          <v-flex xs6>
-            <v-subheader>Super Chat</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="paidColor"
-              class="color"
-              type="color"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs6>
-            <v-subheader class="pl-0">Text Shadow</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="textShadow"
-              :placeholder="defaults.textShadow"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs6>
-            <v-subheader class="pl-0">Opacity</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="opacity"
-              :placeholder="defaults.opacity"
-              type="number"
-              min="0"
-              max="1"
-              step="0.01"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs6>
-            <v-subheader class="pl-0">Rows</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="rows"
-              :placeholder="defaults.rows"
-              type="number"
-              min="1"
-              max="20"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs6>
-            <v-subheader class="pl-0">Speed<small class="pl-1">(sec)</small></v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="speed"
-              :placeholder="defaults.speed"
-              type="number"
-              min="1"
-              max="10"
-              step="0.1"
-              hide-details
-            />
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs6>
-            <v-subheader class="pl-0">Message Overflow</v-subheader>
-          </v-flex>
-          <v-flex xs6>
-            <v-select
-              v-model="overflow"
-              :items="overflows"
-              item-text="text"
-              item-value="value"
-              return-object
-            />
-          </v-flex>
-        </v-layout>
+      <v-container
+        class="pa-0"
+        fluid
+      >
+        <v-list>
+          <v-subheader class="grey--text text--darken-1">AUTHOR</v-subheader>
+          <v-list-tile
+            v-for="room in rooms"
+            :key="room.id"
+            active-class=""
+          >
+            <v-list-tile-content>
+              <v-text-field
+                class="my-2 pt-0 xs12"
+                placeholder="Author"
+        single-line
+        hide-details
+              ></v-text-field>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-layout>
+                <v-btn
+                  class="ma-0"
+                  flat
+                  icon
+                >
+                  <v-icon>chat_bubble</v-icon>
+                </v-btn>
+                <v-btn
+                  class="ma-0"
+                  flat
+                  icon
+                >
+                  <v-icon>chat_bubble</v-icon>
+                </v-btn>
+              </v-layout>
+            </v-list-tile-action>
+          </v-list-tile>
+          <v-list-tile
+            @click=""
+          >
+            <v-list-tile-action>
+              <v-icon color="grey darken-1">add_circle_outline</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title class="grey--text text--darken-1">New room</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
         <v-btn
           class="mt-3"
           color="primary"
@@ -170,16 +62,11 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { defaults } from '~/store/settings'
 
 export default {
   data() {
     return {
-      defaults,
-      overflows: [
-        { text: 'Hidden', value: 'hidden' },
-        { text: 'Overlay', value: 'overlay' }
-      ]
+      rooms: [{id:1}]
     }
   },
   computed: {
