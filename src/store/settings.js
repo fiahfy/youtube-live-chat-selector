@@ -1,14 +1,6 @@
 export const defaults = {
-  color: '#ffffff',
-  memberColor: '#99ff99',
-  moderatorColor: '#9999ff',
-  ownerColor: '#ffff99',
-  paidColor: '#ffcc99',
-  textShadow: '1px 1px 2px #333',
-  opacity: '0.8',
-  rows: '12',
-  speed: '5',
-  overflow: 'hidden'
+  authorFilters: [],
+  messageFilters: []
 }
 
 export default {
@@ -17,32 +9,29 @@ export default {
     ...defaults
   },
   mutations: {
-    setColor(state, { color }) {
-      state.color = color
+    addAuthorFilter(state) {
+      const id = state.authorFilters.reduce((carry, filter) => {
+        return Math.max(carry, filter.id)
+      }, 0)
+      state.authorFilters = [
+        ...state.authorFilters,
+        {
+          id: id + 1
+        }
+      ]
     },
-    setMemberColor(state, { memberColor }) {
-      state.memberColor = memberColor
+    removeAuthorFilter(state, { id }) {
+      state.authorFilters = state.authorFilters.filter(
+        (filter) => filter.id !== id
+      )
     },
-    setModeratorColor(state, { moderatorColor }) {
-      state.moderatorColor = moderatorColor
-    },
-    setOwnerColor(state, { ownerColor }) {
-      state.ownerColor = ownerColor
-    },
-    setTextShadow(state, { textShadow }) {
-      state.textShadow = textShadow
-    },
-    setOpacity(state, { opacity }) {
-      state.opacity = opacity
-    },
-    setRows(state, { rows }) {
-      state.rows = rows
-    },
-    setSpeed(state, { speed }) {
-      state.speed = speed
-    },
-    setOverflow(state, { overflow }) {
-      state.overflow = overflow
+    toggleAuthorFilterRegExp(state, { id }) {
+      state.authorFilters = state.authorFilters.map((filter) => {
+        if (filter.id === id) {
+          filter.regExp = !filter.regExp
+        }
+        return filter
+      })
     }
   }
 }
