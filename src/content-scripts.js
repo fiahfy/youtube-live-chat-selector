@@ -12,13 +12,13 @@ let settings
 
 const isInvalidAuthor = (author) => {
   return !!settings.authorFilters.find((filter) => {
-    return author.includes(filter.value)
+    return author.includes(filter.keyword)
   })
 }
 
 const isInvalidMessage = (message) => {
   return !!settings.messageFilters.find((filter) => {
-    return message.includes(filter.value)
+    return message.includes(filter.keyword)
   })
 }
 

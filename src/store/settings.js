@@ -39,14 +39,14 @@ export default {
         (filter) => filter.id !== id
       )
     },
-    setAuthorFilterValue(state, { id, value }) {
+    setAuthorFilterKeyword(state, { id, keyword }) {
       state.authorFilters = state.authorFilters.slice().map((filter) => {
         if (filter.id !== id) {
           return filter
         }
         return {
           ...filter,
-          value
+          keyword
         }
       })
     },
@@ -79,14 +79,14 @@ export default {
         (filter) => filter.id !== id
       )
     },
-    setMessageFilterValue(state, { id, value }) {
+    setMessageFilterKeyword(state, { id, keyword }) {
       state.messageFilters = state.messageFilters.slice().map((filter) => {
         if (filter.id !== id) {
           return filter
         }
         return {
           ...filter,
-          value
+          keyword
         }
       })
     },

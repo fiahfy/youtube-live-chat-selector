@@ -4,7 +4,7 @@
   >
     <v-list-tile-content>
       <v-text-field
-        v-model="value"
+        v-model="keyword"
         class="my-2 pt-0"
         placeholder="Author or match pattern"
         single-line
@@ -48,14 +48,14 @@ export default {
     }
   },
   computed: {
-    value: {
+    keyword: {
       get() {
-        return this.getAuthorFilter({ id: this.filter.id }).value
+        return this.getAuthorFilter({ id: this.filter.id }).keyword
       },
       set(value) {
-        this.setAuthorFilterValue({
+        this.setAuthorFilterKeyword({
           id: this.filter.id,
-          value
+          keyword: value
         })
       }
     },
@@ -73,7 +73,7 @@ export default {
     },
     ...mapMutations('settings', [
       'removeAuthorFilter',
-      'setAuthorFilterValue',
+      'setAuthorFilterKeyword',
       'toggleAuthorFilterRegExp'
     ])
   }
