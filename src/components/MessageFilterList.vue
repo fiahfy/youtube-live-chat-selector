@@ -1,12 +1,12 @@
 <template>
-  <v-list class="author-filter-list">
-    <v-subheader class="grey--text text--darken-1">AUTHOR</v-subheader>
-    <author-filter-list-item
-      v-for="filter of authorFilters"
+  <v-list class="message-filter-list">
+    <v-subheader class="grey--text text--darken-1">MESSAGE</v-subheader>
+    <message-filter-list-item
+      v-for="filter of messageFilters"
       :key="filter.id"
       :filter="filter"
     />
-    <v-list-tile @click="addAuthorFilter">
+    <v-list-tile @click="addMessageFilter">
       <v-list-tile-action>
         <v-icon color="grey darken-1">add_circle_outline</v-icon>
       </v-list-tile-action>
@@ -18,17 +18,17 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import AuthorFilterListItem from './AuthorFilterListItem'
+import MessageFilterListItem from './MessageFilterListItem'
 
 export default {
   components: {
-    AuthorFilterListItem
+    MessageFilterListItem
   },
   computed: {
-    ...mapState('settings', ['authorFilters'])
+    ...mapState('settings', ['messageFilters'])
   },
   methods: {
-    ...mapMutations('settings', ['addAuthorFilter'])
+    ...mapMutations('settings', ['addMessageFilter'])
   }
 }
 </script>

@@ -10,6 +10,18 @@ const ClassName = {
 let disabled
 let settings
 
+const isInvalidAuthor = (author) => {
+  return !!settings.authorFilters.find((filter) => {
+    return author.includes(filter.value)
+  })
+}
+
+const isInvalidMessage = (message) => {
+  return !!settings.messageFilters.find((filter) => {
+    return message.includes(filter.value)
+  })
+}
+
 const updateMessage = async (node) => {
   if (disabled) {
     const mask = node.querySelector(`.${ClassName.mask}`)
@@ -23,15 +35,23 @@ const updateMessage = async (node) => {
     return
   }
 
+  let result = ''
+  const author = node.querySelector('#author-name').innerText
+  if (isInvalidAuthor(author)) {
+    result = 'Bad author'
+  }
   const message = node.querySelector('#message').innerText
-  if (message.indexOf('い') === -1) {
+  if (isInvalidMessage(message)) {
+    result = 'Bad message'
+  }
+  if (!result) {
     return
   }
 
   const mask = document.createElement('div')
   mask.classList.add(ClassName.mask)
   const span = document.createElement('span')
-  span.innerText = 'Bad comment'
+  span.innerText = result
   mask.appendChild(span)
   node.appendChild(mask)
 }
