@@ -1,6 +1,7 @@
+import stylesheet from './constants/stylesheet'
 import { defaults } from './store/settings'
-import Logger from './utils/logger'
-import Storage from './utils/storage'
+import logger from './utils/logger'
+import storage from './utils/storage'
 import iconOff from './assets/icon-off48.png'
 import iconOn from './assets/icon-on48.png'
 import './assets/icon16.png'
@@ -15,26 +16,24 @@ const setIcon = (tabId) => {
   chrome.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId) => {
+const contentLoaded = async (tabId, frameId, sendResponse) => {
   const disabled = initialDisabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
-  chrome.tabs.sendMessage(tabId, {
-    id: 'disabledChanged',
-    data: { disabled }
-  })
-  const state = await Storage.get()
-  chrome.tabs.sendMessage(tabId, {
-    id: 'stateChanged',
-    data: { state }
-  })
   chrome.pageAction.show(tabId)
+
+  chrome.tabs.insertCSS(tabId, { frameId, code: stylesheet })
+
+  const state = await storage.get()
+  sendResponse({ disabled, state })
 }
 
 const disabledToggled = (tabId) => {
   const disabled = !disabledTabs[tabId]
   initialDisabled = disabled
   disabledTabs[tabId] = disabled
+
   setIcon(tabId)
   chrome.tabs.sendMessage(tabId, {
     id: 'disabledChanged',
@@ -43,7 +42,7 @@ const disabledToggled = (tabId) => {
 }
 
 const stateChanged = async () => {
-  const state = await Storage.get()
+  const state = await storage.get()
   chrome.tabs.query({}, (tabs) => {
     tabs.forEach((tab) => {
       chrome.tabs.sendMessage(tab.id, {
@@ -55,24 +54,25 @@ const stateChanged = async () => {
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  Logger.log('chrome.runtime.onInstalled', details)
+  logger.log('chrome.runtime.onInstalled', details)
 
-  const state = {
+  const state = await storage.get()
+  const newState = {
     settings: defaults,
-    ...(await Storage.get())
+    ...state
   }
-  await Storage.set(state)
+  await storage.set(newState)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+  logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
 
   const { id } = message
-  const { tab } = sender
+  const { tab, frameId } = sender
   switch (id) {
     case 'contentLoaded':
-      contentLoaded(tab.id)
-      break
+      contentLoaded(tab.id, frameId, sendResponse)
+      return true
     case 'disabledToggled':
       disabledToggled(tab.id)
       break
@@ -83,8 +83,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 chrome.pageAction.onClicked.addListener((tab) => {
-  Logger.log('chrome.pageAction.onClicked', tab)
+  logger.log('chrome.pageAction.onClicked', tab)
+
   disabledToggled(tab.id)
 })
 
-Logger.log('background script loaded')
+logger.log('background script loaded')
