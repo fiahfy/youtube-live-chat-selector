@@ -1,26 +1,48 @@
 import className from './class-name'
 
 const code = `
-.${className.badMessage} .${className.mask} {
-  background: var(--yt-live-chat-background-color);
-  color: var(--yt-spec-text-secondary);
-  font-size: smaller;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  transition: opacity .3s;
+.${className.menuButton}.${className.menuButtonActive} > button > yt-icon {
+  color: #4387f1!important;
 }
-.${className.badMessage} .${className.mask}:hover {
-  opacity: 0;
+
+.${className.menuButton} {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
 }
-yt-live-chat-app > iron-dropdown > div > ytd-menu-popup-renderer {
-  max-height: none!important;
+.${className.menuButton} > button > yt-icon > svg {
+  pointer-events: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.${className.guestHidden} yt-live-chat-text-message-renderer[author-type=''] {
+  display: none!important;
+}
+.${className.memberHidden}
+yt-live-chat-text-message-renderer[author-type=member] {
+  display: none!important;
+}
+.${className.moderatorHidden}
+yt-live-chat-text-message-renderer[author-type=moderator] {
+  display: none!important;
+}
+.${className.ownerHidden}
+yt-live-chat-text-message-renderer[author-type=owner] {
+  display: none!important;
+}
+.${className.superChatHidden}
+yt-live-chat-paid-message-renderer {
+  display: none!important;
+}
+.${className.superStickerHidden}
+yt-live-chat-paid-sticker-renderer {
+  display: none!important;
+}
+.${className.membershipHidden}
+yt-live-chat-legacy-paid-message-renderer {
+  display: none!important;
 }
 `
 

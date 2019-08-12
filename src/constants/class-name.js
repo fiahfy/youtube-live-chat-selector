@@ -1,7 +1,25 @@
-const id = chrome.runtime.id
+import browser from 'webextension-polyfill'
 
-export default {
-  controlButton: `${id}-control-button`,
-  badMessage: `${id}-bad-message`,
-  mask: `${id}-mask`
-}
+const id = 'e' + browser.runtime.id.replace('@', '')
+
+const classNames = [
+  'menuButton',
+  'menuButtonActive',
+  'guestHidden',
+  'memberHidden',
+  'moderatorHidden',
+  'ownerHidden',
+  'superChatHidden',
+  'superStickerHidden',
+  'membershipHidden'
+]
+
+export default classNames.reduce((carry, className) => {
+  const kebabName = className.replace(/([A-Z])/g, (s) => {
+    return '-' + s.charAt(0).toLowerCase()
+  })
+  return {
+    ...carry,
+    [className]: `${id}-${kebabName}`
+  }
+}, {})
