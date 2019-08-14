@@ -1,69 +1,116 @@
-import { defaults } from './store/settings'
-import Logger from './utils/logger'
-import Storage from './utils/storage'
-import iconOff from './assets/icon-off48.png'
-import iconOn from './assets/icon-on48.png'
-import './assets/icon16.png'
-import './assets/icon48.png'
-import './assets/icon128.png'
+import browser from 'webextension-polyfill'
+import createStore from './store'
+import code from './constants/stylesheet'
+import icon from './assets/icon.png'
+import iconOn from './assets/icon-on.png'
 
-const enabled = {}
+let initialState = { enabled: false }
+let tabStates = {}
 
-const setIcon = (tabId) => {
-  const path = enabled[tabId] ? iconOn : iconOff
-  chrome.pageAction.setIcon({ tabId, path })
+const getSettings = async () => {
+  const store = await createStore(true)
+  return JSON.parse(JSON.stringify(store.state))
 }
 
-const sendMessage = (tabId) => {
-  chrome.tabs.sendMessage(tabId, {
+const setIcon = async (tabId) => {
+  const path = tabStates[tabId] && tabStates[tabId].enabled ? iconOn : icon
+  await browser.pageAction.setIcon({ tabId, path })
+}
+
+const initTab = async (tabId, frameId) => {
+  const enabled = initialState.enabled
+  tabStates = { ...tabStates, [tabId]: { enabled } }
+
+  await setIcon(tabId)
+  await browser.pageAction.show(tabId)
+  await browser.tabs.insertCSS(tabId, { frameId, code })
+
+  const settings = await getSettings()
+
+  return { enabled, settings }
+}
+
+const getStateOnCurrentTab = async () => {
+  const tabs = await browser.tabs.query({
+    active: true,
+    currentWindow: true
+  })
+  if (!tabs) {
+    return { enabled: false }
+  }
+  const tabId = tabs[0].id
+
+  return { enabled: !!(tabStates[tabId] && tabStates[tabId].enabled) }
+}
+
+const toggleEnabled = async (tabId) => {
+  const enabled = !(tabStates[tabId] && tabStates[tabId].enabled)
+  tabStates = {
+    ...tabStates,
+    [tabId]: { ...(tabStates[tabId] || {}), enabled }
+  }
+
+  await setIcon(tabId)
+
+  await browser.tabs.sendMessage(tabId, {
     id: 'enabledChanged',
-    data: { enabled: enabled[tabId] }
+    data: { enabled }
   })
 }
 
-chrome.pageAction.onClicked.addListener((tab) => {
-  Logger.log('chrome.pageAction.onClicked', tab)
-
-  enabled[tab.id] = !enabled[tab.id]
-  setIcon(tab.id)
-  sendMessage(tab.id)
-})
-
-chrome.runtime.onInstalled.addListener(async (details) => {
-  Logger.log('chrome.runtime.onInstalled', details)
-
-  const state = {
-    settings: defaults,
-    ...(await Storage.get())
+const enabledChangedOnCurrentTab = async (enabled) => {
+  const tabs = await browser.tabs.query({
+    active: true,
+    currentWindow: true
+  })
+  if (!tabs) {
+    return
   }
-  await Storage.set(state)
-})
+  const tabId = tabs[0].id
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  Logger.log('chrome.runtime.onMessage', message, sender, sendResponse)
+  tabStates = {
+    ...tabStates,
+    [tabId]: { ...(tabStates[tabId] || {}), enabled }
+  }
 
-  const { id } = message
-  const { tab } = sender
+  await setIcon(tabId)
+
+  await browser.tabs.sendMessage(tabId, {
+    id: 'enabledChanged',
+    data: { enabled }
+  })
+}
+
+const settingsChanged = async () => {
+  const settings = await getSettings()
+  const tabs = await browser.tabs.query({})
+  for (let tab of tabs) {
+    try {
+      await browser.tabs.sendMessage(tab.id, {
+        id: 'settingsChanged',
+        data: { settings }
+      })
+    } catch (e) {} // eslint-disable-line no-empty
+  }
+}
+
+browser.runtime.onMessage.addListener(async (message, sender) => {
+  const { id, data } = message
+  const { tab, frameId } = sender
   switch (id) {
     case 'contentLoaded':
-      chrome.pageAction.show(tab.id)
-      setIcon(tab.id)
-      sendMessage(tab.id)
+      return await initTab(tab.id, frameId)
+    case 'popupLoaded': {
+      return await getStateOnCurrentTab()
+    }
+    case 'menuButtonClicked':
+      await toggleEnabled(tab.id)
       break
-    case 'controlButtonClicked':
-      enabled[tab.id] = !enabled[tab.id]
-      setIcon(tab.id)
-      sendMessage(tab.id)
+    case 'enabledChanged':
+      await enabledChangedOnCurrentTab(data.enabled)
       break
-    case 'stateChanged':
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => {
-          chrome.tabs.sendMessage(tab.id, { id: 'stateChanged' })
-        })
-      })
+    case 'settingsChanged':
+      await settingsChanged()
       break
   }
 })
-;(() => {
-  Logger.log('background script loaded')
-})()

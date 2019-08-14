@@ -3,12 +3,10 @@ module.exports = {
   env: {
     node: true
   },
-  globals: {
-    chrome: true
-  },
   extends: [
     'eslint:recommended',
     'plugin:prettier/recommended',
-    'plugin:vue/recommended'
+    'plugin:vue/recommended',
+    'prettier/vue'
   ]
 }

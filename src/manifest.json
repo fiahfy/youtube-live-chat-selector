@@ -1,11 +1,7 @@
 {
-  "name": "YouTube Live Chat Filter",
-  "description": "Filter Messages on YouTube Live Chat",
   "manifest_version": 2,
   "icons": {
-    "16": "assets/icon16.png",
-    "48": "assets/icon48.png",
-    "128": "assets/icon128.png"
+    "128": "assets/icon.png"
   },
   "background": {
     "scripts": ["background.js"]
@@ -15,19 +11,17 @@
       "run_at": "document_start",
       "matches": ["https://www.youtube.com/live_chat*"],
       "all_frames": true,
-      "js": ["content-scripts.js"]
+      "js": ["content-script.js"]
     }
   ],
   "page_action": {
-    "default_icon": "assets/icon48.png"
-  },
-  "options_ui": {
-    "page": "assets/options.html",
-    "open_in_tab": false
+    "default_icon": "assets/icon.png",
+    "default_popup": "assets/popup.html"
   },
   "permissions": [
+    "storage",
     "tabs",
-    "storage"
+    "https://www.youtube.com/*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

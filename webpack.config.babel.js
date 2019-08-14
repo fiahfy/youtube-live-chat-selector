@@ -11,12 +11,13 @@ export default {
   context: `${__dirname}/src`,
   entry: {
     background: './background',
-    'content-scripts': './content-scripts',
-    options: './options'
+    'content-script': './content-script',
+    popup: './popup'
   },
   output: {
     path: `${__dirname}/app/`,
-    filename: '[name].js'
+    filename: '[name].js',
+    publicPath: '../'
   },
   module: {
     rules: [
@@ -34,11 +35,15 @@ export default {
         use: ['vue-style-loader', 'css-loader']
       },
       {
-        test: /\.(jpg|gif|png|svg)$/,
+        test: /\.(jpg|gif|png|woff|woff2|eot|ttf)$/,
         loader: 'file-loader',
         options: {
           name: 'assets/[name].[ext]'
         }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
       }
     ]
   },
@@ -55,6 +60,8 @@ export default {
           return Buffer.from(
             JSON.stringify({
               ...JSON.parse(content.toString()),
+              name: process.env.npm_package_productName,
+              description: process.env.npm_package_description,
               version: process.env.npm_package_version
             })
           )
@@ -62,9 +69,9 @@ export default {
       }
     ]),
     new HtmlWebpackPlugin({
-      template: './assets/options.html',
-      filename: './assets/options.html',
-      chunks: ['options']
+      template: './assets/popup.html',
+      filename: './assets/popup.html',
+      chunks: ['popup']
     }),
     new VueLoaderPlugin()
   ],
