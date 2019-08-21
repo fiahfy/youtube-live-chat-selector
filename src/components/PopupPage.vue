@@ -75,10 +75,10 @@ export default {
   computed: {
     types: {
       get() {
-        return this.$store.state.types
+        return this.$store.getters.types
       },
       set(value) {
-        this.$store.commit('setTypes', {
+        this.$store.dispatch('setTypes', {
           types: value
         })
       }

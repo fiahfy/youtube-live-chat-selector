@@ -29,12 +29,27 @@ const vuexPersist = new VuexPersistence({
 })
 
 const initialState = {
-  types: ['moderator', 'owner', 'super_chat', 'super_sticker', 'membership']
+  types: {
+    guest: false,
+    member: false,
+    moderator: true,
+    owner: true,
+    super_chat: false,
+    super_sticker: false,
+    membership: false
+  }
 }
 
 const config = {
   state: {
     ...initialState
+  },
+  getters: {
+    types(state) {
+      return Object.entries(state.types)
+        .filter(([, v]) => v)
+        .map(([k]) => k)
+    }
   },
   mutations: {
     setTypes(state, { types }) {
@@ -44,6 +59,15 @@ const config = {
       for (let [k, v] of Object.entries(initialState)) {
         state[k] = v
       }
+    }
+  },
+  actions: {
+    setTypes({ commit }, { types }) {
+      const newTypes = Object.keys(initialState.types).reduce(
+        (carry, type) => ({ ...carry, [type]: types.includes(type) }),
+        {}
+      )
+      commit('setTypes', { types: newTypes })
     }
   },
   plugins: [
