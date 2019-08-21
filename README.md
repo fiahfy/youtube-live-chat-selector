@@ -1,5 +1,5 @@
 # YouTube Live Chat Filter
-[![Build Status](https://travis-ci.org/fiahfy/youtube-live-chat-filter.svg?branch=master)](https://travis-ci.org/fiahfy/youtube-live-chat-filter)
+[![Build Status](https://travis-ci.com/fiahfy/youtube-live-chat-filter.svg?branch=master)](https://travis-ci.com/fiahfy/youtube-live-chat-filter)
 
 > Chrome Extension for Filtering Messages on YouTube Live Chat.
 

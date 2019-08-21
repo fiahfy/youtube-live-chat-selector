@@ -35,7 +35,7 @@ const getStateOnCurrentTab = async () => {
     active: true,
     currentWindow: true
   })
-  if (!tabs) {
+  if (!tabs.length) {
     return { enabled: false }
   }
   const tabId = tabs[0].id
@@ -63,7 +63,7 @@ const enabledChangedOnCurrentTab = async (enabled) => {
     active: true,
     currentWindow: true
   })
-  if (!tabs) {
+  if (!tabs.length) {
     return
   }
   const tabId = tabs[0].id
@@ -100,9 +100,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   switch (id) {
     case 'contentLoaded':
       return await initTab(tab.id, frameId)
-    case 'popupLoaded': {
+    case 'popupLoaded':
       return await getStateOnCurrentTab()
-    }
     case 'menuButtonClicked':
       await toggleEnabled(tab.id)
       break
