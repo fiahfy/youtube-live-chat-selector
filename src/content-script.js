@@ -15,30 +15,25 @@ const addMenuButton = () => {
   }
 
   const icon = document.createElement('yt-icon')
-  icon.classList.add('style-scope')
-  icon.classList.add('yt-live-chat-header-renderer')
-  icon.innerHTML = filterList
-
-  const button = document.createElement('button')
-  button.setAttribute('id', 'button')
-  button.classList.add('yt-icon-button')
-  button.classList.add('style-scope')
-  button.append(icon)
+  icon.classList.add('yt-live-chat-header-renderer', 'style-scope')
 
   const iconButton = document.createElement('yt-icon-button')
-  iconButton.classList.add(className.menuButton)
-  iconButton.classList.add('style-scope')
-  iconButton.classList.add('yt-live-chat-header-renderer')
+  iconButton.id = 'overflow'
+  iconButton.classList.add(
+    className.menuButton,
+    'style-scope',
+    'yt-live-chat-header-renderer'
+  )
   iconButton.title = 'Filter messages'
   iconButton.onclick = () => {
     browser.runtime.sendMessage({ id: 'menuButtonClicked' })
   }
-  iconButton.append(button)
+  iconButton.append(icon)
 
   header.insertBefore(iconButton, refIconButton)
 
-  // remove unnecessary generated button
-  iconButton.querySelector('#button').remove()
+  // insert svg after wrapper button appended
+  icon.innerHTML = filterList
 
   updateMenuButton()
 }
