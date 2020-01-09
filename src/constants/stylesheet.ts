@@ -20,30 +20,31 @@ yt-live-chat-header-renderer > #primary-content > #view-selector > yt-sort-filte
   height: 100%;
 }
 
-.${className.guestHidden} yt-live-chat-text-message-renderer[author-type=''] {
+.${className.guestHidden} yt-live-chat-item-list-renderer
+yt-live-chat-text-message-renderer[author-type=''] {
   display: none!important;
 }
-.${className.memberHidden}
+.${className.memberHidden} yt-live-chat-item-list-renderer
 yt-live-chat-text-message-renderer[author-type=member] {
   display: none!important;
 }
-.${className.moderatorHidden}
+.${className.moderatorHidden} yt-live-chat-item-list-renderer
 yt-live-chat-text-message-renderer[author-type=moderator] {
   display: none!important;
 }
-.${className.ownerHidden}
+.${className.ownerHidden} yt-live-chat-item-list-renderer
 yt-live-chat-text-message-renderer[author-type=owner] {
   display: none!important;
 }
-.${className.superChatHidden}
+.${className.superChatHidden} yt-live-chat-item-list-renderer
 yt-live-chat-paid-message-renderer {
   display: none!important;
 }
-.${className.superStickerHidden}
+.${className.superStickerHidden} yt-live-chat-item-list-renderer
 yt-live-chat-paid-sticker-renderer {
   display: none!important;
 }
-.${className.membershipHidden}
+.${className.membershipHidden} yt-live-chat-item-list-renderer
 yt-live-chat-legacy-paid-message-renderer {
   display: none!important;
 }

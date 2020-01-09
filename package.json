@@ -1,42 +1,47 @@
 {
   "name": "youtube-live-chat-filter",
-  "description": "Filter Messages on YouTube Live Chat",
-  "version": "0.0.3",
+  "description": "Chrome Extension for Filtering Chat Messages on YouTube Live",
+  "version": "0.0.4",
   "author": {
     "name": "fiahfy",
     "email": "d.fiahfy@gmail.com",
     "url": "https://fiahfy.github.io/"
   },
   "dependencies": {
-    "vue": "^2.6.10",
-    "vuetify": "^2.0.5",
-    "vuex": "^3.0.1",
-    "vuex-persist": "^2.0.0",
-    "webextension-polyfill": "^0.4.0"
+    "vue": "^2.6.11",
+    "vue-property-decorator": "^8.3.0",
+    "vuetify": "^2.2.3",
+    "vuex": "^3.1.2",
+    "vuex-module-decorators": "^0.11.0",
+    "vuex-persist": "^2.2.0",
+    "webextension-polyfill-ts": "^0.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-transform-runtime": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
-    "babel-loader": "^8.0.6",
-    "copy-webpack-plugin": "^5.0.4",
-    "css-loader": "^3.2.0",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-vue": "^5.2.3",
-    "file-loader": "^4.2.0",
+    "@typescript-eslint/eslint-plugin": "^2.15.0",
+    "@typescript-eslint/parser": "^2.15.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^5.0.1",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.1",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^6.1.2",
+    "file-loader": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
-    "husky": "^3.0.3",
-    "prettier": "^1.18.2",
+    "husky": "^4.0.3",
+    "prettier": "^1.19.1",
+    "sass": "^1.24.3",
+    "sass-loader": "^8.0.0",
     "svg-inline-loader": "^0.8.0",
-    "vue-loader": "^15.7.1",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6",
-    "webpack-extension-reloader": "^1.1.0"
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.4.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-extension-reloader": "^1.1.4"
   },
   "keywords": [
     "chrome extension",
@@ -46,16 +51,16 @@
     "youtube"
   ],
   "private": true,
-  "productName": "YouTube Live Chat Filter",
+  "productName": "Chat Filter for YouTube Live",
   "repository": {
     "type": "git",
     "url": "https://github.com/fiahfy/youtube-live-chat-filter"
   },
   "scripts": {
     "build": "webpack",
-    "dev": "webpack -w --config webpack.config.dev.babel.js",
-    "lint": "eslint -f codeframe --ext .js,.vue --ignore-path .gitignore .",
-    "package": "NODE_ENV=production npm run build && mkdir -p dist && zip -r dist/archive.zip app",
+    "dev": "webpack -w --config webpack.config.dev.js",
+    "lint": "eslint -f codeframe --ext .ts,.vue --ignore-path .gitignore src",
+    "package": "npm run build -- -p && mkdir -p dist && zip -r dist/archive.zip app",
     "test": "npm run lint"
   }
 }
