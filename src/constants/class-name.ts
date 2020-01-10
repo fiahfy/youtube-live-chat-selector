@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill'
+import { browser } from 'webextension-polyfill-ts'
 
 const id = 'e' + browser.runtime.id.replace('@', '')
 
@@ -22,4 +22,4 @@ export default classNames.reduce((carry, className) => {
     ...carry,
     [className]: `${id}-${kebabName}`
   }
-}, {})
+}, {}) as { [key: string]: string }

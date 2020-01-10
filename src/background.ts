@@ -1,23 +1,27 @@
-import browser from 'webextension-polyfill'
-import createStore from './store'
-import code from './constants/stylesheet'
-import icon from './assets/icon.png'
-import iconOn from './assets/icon-on.png'
+import { browser } from 'webextension-polyfill-ts'
+import { readyStore } from '~/store'
+import code from '~/constants/stylesheet'
+import icon from '~/assets/icon.png'
+import iconOn from '~/assets/icon-on.png'
 
-let initialState = { enabled: false }
-let tabStates = {}
-
-const getSettings = async () => {
-  const store = await createStore(true)
-  return JSON.parse(JSON.stringify(store.state))
+interface TabState {
+  enabled: boolean
 }
 
-const setIcon = async (tabId) => {
+const initialState = { enabled: false }
+let tabStates: { [tabId: number]: TabState } = {}
+
+const getSettings = async () => {
+  const store = await readyStore()
+  return JSON.parse(JSON.stringify(store.state.settings))
+}
+
+const setIcon = async (tabId: number) => {
   const path = tabStates[tabId] && tabStates[tabId].enabled ? iconOn : icon
   await browser.pageAction.setIcon({ tabId, path })
 }
 
-const initTab = async (tabId, frameId) => {
+const initTab = async (tabId: number, frameId: number) => {
   const enabled = initialState.enabled
   tabStates = { ...tabStates, [tabId]: { enabled } }
 
@@ -39,15 +43,19 @@ const getStateOnCurrentTab = async () => {
     return { enabled: false }
   }
   const tabId = tabs[0].id
+  if (!tabId) {
+    return { enabled: false }
+  }
 
   return { enabled: !!(tabStates[tabId] && tabStates[tabId].enabled) }
 }
 
-const toggleEnabled = async (tabId) => {
+const toggleEnabled = async (tabId: number) => {
   const enabled = !(tabStates[tabId] && tabStates[tabId].enabled)
+  initialState.enabled = enabled
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] || {}), enabled }
+    [tabId]: { ...(tabStates[tabId] ?? {}), enabled }
   }
 
   await setIcon(tabId)
@@ -58,7 +66,7 @@ const toggleEnabled = async (tabId) => {
   })
 }
 
-const enabledChangedOnCurrentTab = async (enabled) => {
+const enabledChangedOnCurrentTab = async (enabled: boolean) => {
   const tabs = await browser.tabs.query({
     active: true,
     currentWindow: true
@@ -67,10 +75,13 @@ const enabledChangedOnCurrentTab = async (enabled) => {
     return
   }
   const tabId = tabs[0].id
+  if (!tabId) {
+    return
+  }
 
   tabStates = {
     ...tabStates,
-    [tabId]: { ...(tabStates[tabId] || {}), enabled }
+    [tabId]: { ...(tabStates[tabId] ?? {}), enabled }
   }
 
   await setIcon(tabId)
@@ -84,12 +95,13 @@ const enabledChangedOnCurrentTab = async (enabled) => {
 const settingsChanged = async () => {
   const settings = await getSettings()
   const tabs = await browser.tabs.query({})
-  for (let tab of tabs) {
+  for (const tab of tabs) {
     try {
-      await browser.tabs.sendMessage(tab.id, {
-        id: 'settingsChanged',
-        data: { settings }
-      })
+      tab.id &&
+        (await browser.tabs.sendMessage(tab.id, {
+          id: 'settingsChanged',
+          data: { settings }
+        }))
     } catch (e) {} // eslint-disable-line no-empty
   }
 }
@@ -99,11 +111,11 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   const { tab, frameId } = sender
   switch (id) {
     case 'contentLoaded':
-      return await initTab(tab.id, frameId)
+      return tab?.id && frameId && (await initTab(tab.id, frameId))
     case 'popupLoaded':
       return await getStateOnCurrentTab()
     case 'menuButtonClicked':
-      await toggleEnabled(tab.id)
+      tab?.id && (await toggleEnabled(tab.id))
       break
     case 'enabledChanged':
       await enabledChangedOnCurrentTab(data.enabled)
