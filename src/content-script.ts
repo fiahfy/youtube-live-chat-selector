@@ -109,4 +109,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   enabled = data.enabled
   settings = data.settings
   addMenuButton()
+  updateClasses()
 })
