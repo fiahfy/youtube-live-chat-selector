@@ -37,7 +37,7 @@ const addMenuButton = () => {
     'style-scope',
     'yt-live-chat-header-renderer'
   )
-  iconButton.title = 'Filter messages'
+  iconButton.title = 'Select messages'
   iconButton.onclick = () => {
     browser.runtime.sendMessage({ id: 'menuButtonClicked' })
   }
