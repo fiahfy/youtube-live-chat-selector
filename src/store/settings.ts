@@ -3,14 +3,14 @@ import Settings from '~/models/settings'
 
 const initialState = {
   types: {
-    guest: false,
-    member: false,
+    guest: true,
+    member: true,
     moderator: true,
     owner: true,
-    superChat: false,
-    superSticker: false,
-    membership: false
-  }
+    superChat: true,
+    superSticker: true,
+    membership: true,
+  },
 }
 
 @Module({ name: 'settings' })
