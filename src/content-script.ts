@@ -1,20 +1,31 @@
 import { browser } from 'webextension-polyfill-ts'
 import Settings from '~/models/settings'
-import className from '~/constants/class-name'
-import filterList from '~/assets/filter-list.svg'
+import playlistAddCheck from '~/assets/playlist-add-check.svg'
 
-let enabled = false
+const ClassName = {
+  menuButton: 'ylcs-menu-button',
+  activeMenuButton: 'ylcs-active-menu-button',
+  guestHidden: 'ylcs-guest-hidden',
+  memberHidden: 'ylcs-member-hidden',
+  moderatorHidden: 'ylcs-moderator-hidden',
+  ownerHidden: 'ylcs-owner-hidden',
+  superchatHidden: 'ylcs-superchat-hidden',
+  superstickerHidden: 'ylcs-supersticker-hidden',
+  membershipHidden: 'ylcs-membership-hidden',
+}
+
+let enabled: boolean
 let settings: Settings
 
 const updateMenuButton = () => {
-  const button = document.querySelector(`.${className.menuButton}`)
+  const button = document.querySelector(`.${ClassName.menuButton}`)
   if (!button) {
     return
   }
   if (enabled) {
-    button.classList.add(className.menuButtonActive)
+    button.classList.add(ClassName.activeMenuButton)
   } else {
-    button.classList.remove(className.menuButtonActive)
+    button.classList.remove(ClassName.activeMenuButton)
   }
 }
 
@@ -33,11 +44,11 @@ const addMenuButton = () => {
   const iconButton = document.createElement('yt-icon-button')
   iconButton.id = 'overflow'
   iconButton.classList.add(
-    className.menuButton,
+    ClassName.menuButton,
     'style-scope',
     'yt-live-chat-header-renderer'
   )
-  iconButton.title = 'Select messages'
+  iconButton.title = 'Select Messages'
   iconButton.onclick = () => {
     browser.runtime.sendMessage({ id: 'menuButtonClicked' })
   }
@@ -46,46 +57,46 @@ const addMenuButton = () => {
   header.insertBefore(iconButton, refIconButton)
 
   // insert svg after wrapper button appended
-  icon.innerHTML = filterList
+  icon.innerHTML = playlistAddCheck
 
   updateMenuButton()
 }
 
 const updateClasses = () => {
   if (enabled && !settings.types.guest) {
-    document.body.classList.add(className.guestHidden)
+    document.body.classList.add(ClassName.guestHidden)
   } else {
-    document.body.classList.remove(className.guestHidden)
+    document.body.classList.remove(ClassName.guestHidden)
   }
   if (enabled && !settings.types.member) {
-    document.body.classList.add(className.memberHidden)
+    document.body.classList.add(ClassName.memberHidden)
   } else {
-    document.body.classList.remove(className.memberHidden)
+    document.body.classList.remove(ClassName.memberHidden)
   }
   if (enabled && !settings.types.moderator) {
-    document.body.classList.add(className.moderatorHidden)
+    document.body.classList.add(ClassName.moderatorHidden)
   } else {
-    document.body.classList.remove(className.moderatorHidden)
+    document.body.classList.remove(ClassName.moderatorHidden)
   }
   if (enabled && !settings.types.owner) {
-    document.body.classList.add(className.ownerHidden)
+    document.body.classList.add(ClassName.ownerHidden)
   } else {
-    document.body.classList.remove(className.ownerHidden)
+    document.body.classList.remove(ClassName.ownerHidden)
   }
   if (enabled && !settings.types.superChat) {
-    document.body.classList.add(className.superChatHidden)
+    document.body.classList.add(ClassName.superchatHidden)
   } else {
-    document.body.classList.remove(className.superChatHidden)
+    document.body.classList.remove(ClassName.superchatHidden)
   }
   if (enabled && !settings.types.superSticker) {
-    document.body.classList.add(className.superStickerHidden)
+    document.body.classList.add(ClassName.superstickerHidden)
   } else {
-    document.body.classList.remove(className.superStickerHidden)
+    document.body.classList.remove(ClassName.superstickerHidden)
   }
   if (enabled && !settings.types.membership) {
-    document.body.classList.add(className.membershipHidden)
+    document.body.classList.add(ClassName.membershipHidden)
   } else {
-    document.body.classList.remove(className.membershipHidden)
+    document.body.classList.remove(ClassName.membershipHidden)
   }
 }
 
@@ -93,7 +104,7 @@ browser.runtime.onMessage.addListener((message) => {
   const { id, data } = message
   switch (id) {
     case 'enabledChanged':
-      enabled = data.enabled
+      enabled = data.tabState.enabled
       updateMenuButton()
       updateClasses()
       break
@@ -106,7 +117,7 @@ browser.runtime.onMessage.addListener((message) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await browser.runtime.sendMessage({ id: 'contentLoaded' })
-  enabled = data.enabled
+  enabled = data.tabState.enabled
   settings = data.settings
   addMenuButton()
   updateClasses()
