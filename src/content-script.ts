@@ -104,7 +104,7 @@ browser.runtime.onMessage.addListener((message) => {
   const { id, data } = message
   switch (id) {
     case 'enabledChanged':
-      enabled = data.tabState.enabled
+      enabled = data.enabled
       updateMenuButton()
       updateClasses()
       break
@@ -117,7 +117,7 @@ browser.runtime.onMessage.addListener((message) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await browser.runtime.sendMessage({ id: 'contentLoaded' })
-  enabled = data.tabState.enabled
+  enabled = data.enabled
   settings = data.settings
   addMenuButton()
   updateClasses()
