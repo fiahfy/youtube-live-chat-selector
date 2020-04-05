@@ -1,11 +1,13 @@
+export type AuthorType =
+  | 'guest'
+  | 'member'
+  | 'moderator'
+  | 'owner'
+  | 'owner'
+  | 'super_chat'
+  | 'super_sticker'
+  | 'membership'
+
 export default interface Settings {
-  types: {
-    guest: boolean
-    member: boolean
-    moderator: boolean
-    owner: boolean
-    superChat: boolean
-    superSticker: boolean
-    membership: boolean
-  }
+  enableTypes: AuthorType[]
 }

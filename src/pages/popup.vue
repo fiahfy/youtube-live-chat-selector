@@ -5,28 +5,28 @@
         <div class="d-flex">
           <div class="mr-5">
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Guest"
               value="guest"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Member"
               value="member"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Moderator"
               value="moderator"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Owner"
               value="owner"
               dense
@@ -35,21 +35,21 @@
           </div>
           <div>
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Super Chat"
-              value="superChat"
+              value="super_chat"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Super Sticker"
-              value="superSticker"
+              value="super_sticker"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="types"
+              v-model="enableTypes"
               label="Membership"
               value="membership"
               dense
@@ -71,17 +71,17 @@ import { settingsStore } from '~/store'
 
 @Component
 export default class Popup extends Vue {
-  get types() {
-    return settingsStore.visibleTypes
+  get enableTypes() {
+    return settingsStore.enableTypes
   }
-  set types(value) {
-    settingsStore.setVisibleTypes({
-      types: value,
+  set enableTypes(value) {
+    settingsStore.setEnableTypes({
+      enableTypes: value,
     })
   }
 
   onClickReset() {
-    settingsStore.resetState()
+    settingsStore.reset()
   }
 }
 </script>
