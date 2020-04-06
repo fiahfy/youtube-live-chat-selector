@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
 import Settings, { AuthorType } from '~/models/settings'
 
 const initialState: Settings = {
-  enableTypes: [
+  enabledTypes: [
     'guest',
     'member',
     'moderator',
@@ -15,11 +15,11 @@ const initialState: Settings = {
 
 @Module({ name: 'settings' })
 export default class SettingsModule extends VuexModule {
-  enableTypes = initialState.enableTypes
+  enabledTypes = initialState.enabledTypes
 
   @Mutation
-  setEnableTypes({ enableTypes }: { enableTypes: AuthorType[] }) {
-    this.enableTypes = enableTypes
+  setEnabledTypes({ enabledTypes }: { enabledTypes: AuthorType[] }) {
+    this.enabledTypes = enabledTypes
   }
   @Mutation
   reset() {

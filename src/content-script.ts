@@ -63,37 +63,37 @@ const addMenuButton = () => {
 }
 
 const updateClasses = () => {
-  if (enabled && !settings.enableTypes.includes('guest')) {
+  if (enabled && !settings.enabledTypes.includes('guest')) {
     document.body.classList.add(ClassName.guestHidden)
   } else {
     document.body.classList.remove(ClassName.guestHidden)
   }
-  if (enabled && !settings.enableTypes.includes('member')) {
+  if (enabled && !settings.enabledTypes.includes('member')) {
     document.body.classList.add(ClassName.memberHidden)
   } else {
     document.body.classList.remove(ClassName.memberHidden)
   }
-  if (enabled && !settings.enableTypes.includes('moderator')) {
+  if (enabled && !settings.enabledTypes.includes('moderator')) {
     document.body.classList.add(ClassName.moderatorHidden)
   } else {
     document.body.classList.remove(ClassName.moderatorHidden)
   }
-  if (enabled && !settings.enableTypes.includes('owner')) {
+  if (enabled && !settings.enabledTypes.includes('owner')) {
     document.body.classList.add(ClassName.ownerHidden)
   } else {
     document.body.classList.remove(ClassName.ownerHidden)
   }
-  if (enabled && !settings.enableTypes.includes('super_chat')) {
+  if (enabled && !settings.enabledTypes.includes('super_chat')) {
     document.body.classList.add(ClassName.superChatHidden)
   } else {
     document.body.classList.remove(ClassName.superChatHidden)
   }
-  if (enabled && !settings.enableTypes.includes('super_sticker')) {
+  if (enabled && !settings.enabledTypes.includes('super_sticker')) {
     document.body.classList.add(ClassName.superStickerHidden)
   } else {
     document.body.classList.remove(ClassName.superStickerHidden)
   }
-  if (enabled && !settings.enableTypes.includes('membership')) {
+  if (enabled && !settings.enabledTypes.includes('membership')) {
     document.body.classList.add(ClassName.membershipHidden)
   } else {
     document.body.classList.remove(ClassName.membershipHidden)

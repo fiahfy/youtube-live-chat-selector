@@ -5,28 +5,28 @@
         <div class="d-flex">
           <div class="mr-5">
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Guest"
               value="guest"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Member"
               value="member"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Moderator"
               value="moderator"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Owner"
               value="owner"
               dense
@@ -35,21 +35,21 @@
           </div>
           <div>
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Super Chat"
               value="super_chat"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Super Sticker"
               value="super_sticker"
               dense
               class="mt-0"
             />
             <v-switch
-              v-model="enableTypes"
+              v-model="enabledTypes"
               label="Membership"
               value="membership"
               dense
@@ -71,12 +71,12 @@ import { settingsStore } from '~/store'
 
 @Component
 export default class Popup extends Vue {
-  get enableTypes() {
-    return settingsStore.enableTypes
+  get enabledTypes() {
+    return settingsStore.enabledTypes
   }
-  set enableTypes(value) {
-    settingsStore.setEnableTypes({
-      enableTypes: value,
+  set enabledTypes(value) {
+    settingsStore.setEnabledTypes({
+      enabledTypes: value,
     })
   }
 

@@ -9,5 +9,5 @@ export type AuthorType =
   | 'membership'
 
 export default interface Settings {
-  enableTypes: AuthorType[]
+  enabledTypes: AuthorType[]
 }
