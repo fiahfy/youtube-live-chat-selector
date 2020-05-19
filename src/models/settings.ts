@@ -4,10 +4,11 @@ export type AuthorType =
   | 'moderator'
   | 'owner'
   | 'owner'
-  | 'super_chat'
-  | 'super_sticker'
+  | 'super-chat'
+  | 'super-sticker'
   | 'membership'
+export type Types = { [authorType in AuthorType]: boolean }
 
 export default interface Settings {
-  enabledTypes: AuthorType[]
+  types: Types
 }

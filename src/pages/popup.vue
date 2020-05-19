@@ -37,14 +37,14 @@
             <v-switch
               v-model="enabledTypes"
               label="Super Chat"
-              value="super_chat"
+              value="super-chat"
               dense
               class="mt-0"
             />
             <v-switch
               v-model="enabledTypes"
               label="Super Sticker"
-              value="super_sticker"
+              value="super-sticker"
               dense
               class="mt-0"
             />
@@ -67,17 +67,24 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { AuthorType, Types } from '~/models/settings'
 import { settingsStore } from '~/store'
 
 @Component
 export default class Popup extends Vue {
   get enabledTypes() {
-    return settingsStore.enabledTypes
+    return Object.keys(settingsStore.types).filter(
+      (type) => settingsStore.types[type as AuthorType]
+    )
   }
   set enabledTypes(value) {
-    settingsStore.setEnabledTypes({
-      enabledTypes: value,
-    })
+    const types = Object.keys(settingsStore.types).reduce((carry, type) => {
+      return {
+        ...carry,
+        [type]: value.includes(type),
+      }
+    }, {} as Types)
+    settingsStore.setTypes({ types })
   }
 
   onClickReset() {
