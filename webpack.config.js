@@ -64,7 +64,7 @@ module.exports = {
         'icon.png',
         {
           from: 'manifest.json',
-          transform: function (content) {
+          transform: (content) => {
             return Buffer.from(
               JSON.stringify({
                 ...JSON.parse(content.toString()),
