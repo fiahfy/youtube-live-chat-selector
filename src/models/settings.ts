@@ -9,6 +9,6 @@ export type AuthorType =
   | 'membership'
 export type Types = { [authorType in AuthorType]: boolean }
 
-export default interface Settings {
+export type Settings = {
   types: Types
 }

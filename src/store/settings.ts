@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
-import Settings, { Types } from '~/models/settings'
+import { Settings, Types } from '~/models'
 
 const initialState: Settings = {
   types: {

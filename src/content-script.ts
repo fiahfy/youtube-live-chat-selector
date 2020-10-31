@@ -1,5 +1,5 @@
 import { browser } from 'webextension-polyfill-ts'
-import Settings from '~/models/settings'
+import { Settings } from '~/models'
 import playlistAddCheck from '~/assets/playlist-add-check.svg'
 
 const ClassName = {

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content class="fill-height">
+    <v-main class="fill-height">
       <v-container fluid>
         <div class="d-flex">
           <div class="mr-5">
@@ -57,49 +57,49 @@
             />
           </div>
         </div>
-        <v-btn depressed small block @click="onClickReset">
-          Reset
-        </v-btn>
+        <v-btn depressed small block @click="onClickReset"> Reset </v-btn>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import { AuthorType, Types } from '~/models/settings'
+import { defineComponent, computed } from '@vue/composition-api'
+import { AuthorType, Types } from '~/models'
 import { settingsStore } from '~/store'
 
-@Component
-export default class Popup extends Vue {
-  get enabledTypes() {
-    return Object.keys(settingsStore.types).filter(
-      (type) => settingsStore.types[type as AuthorType]
-    )
-  }
-  set enabledTypes(value) {
-    const types = Object.keys(settingsStore.types).reduce((carry, type) => {
-      return {
-        ...carry,
-        [type]: value.includes(type),
-      }
-    }, {} as Types)
-    settingsStore.setTypes({ types })
-  }
+export default defineComponent({
+  setup() {
+    const enabledTypes = computed({
+      get: () => {
+        return Object.keys(settingsStore.types).filter(
+          (type) => settingsStore.types[type as AuthorType]
+        )
+      },
+      set: (value) => {
+        const types = Object.keys(settingsStore.types).reduce((carry, type) => {
+          return {
+            ...carry,
+            [type]: value.includes(type),
+          }
+        }, {} as Types)
+        settingsStore.setTypes({ types })
+      },
+    })
 
-  onClickReset() {
-    settingsStore.reset()
-  }
-}
+    const handleClickReset = () => {
+      settingsStore.reset()
+    }
+
+    return {
+      enabledTypes,
+      handleClickReset,
+    }
+  },
+})
 </script>
 
 <style lang="scss">
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 html {
   overflow-y: hidden;
 }
@@ -108,8 +108,5 @@ html {
 <style lang="scss" scoped>
 .v-application {
   min-width: 320px;
-  .v-content ::v-deep .v-content__wrap {
-    overflow-y: auto;
-  }
 }
 </style>
