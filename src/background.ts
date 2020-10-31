@@ -16,7 +16,7 @@ const setIcon = async (tabId: number, enabled: boolean) => {
   await browser.pageAction.setIcon({ tabId, path })
 }
 
-const contentLoaded = async (tabId: number, frameId: number) => {
+const contentLoaded = async (tabId: number) => {
   const enabled = enabledStates[tabId] ?? initialEnabled
   enabledStates = { ...enabledStates, [tabId]: enabled }
 
