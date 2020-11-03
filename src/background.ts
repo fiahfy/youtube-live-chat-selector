@@ -60,10 +60,10 @@ const settingsChanged = async () => {
 
 browser.runtime.onMessage.addListener(async (message, sender) => {
   const { id } = message
-  const { tab, frameId } = sender
+  const { tab } = sender
   switch (id) {
     case 'contentLoaded':
-      return tab?.id && frameId && (await contentLoaded(tab.id, frameId))
+      return tab?.id && (await contentLoaded(tab.id))
     case 'menuButtonClicked':
       tab?.id && (await menuButtonClicked(tab.id))
       break
