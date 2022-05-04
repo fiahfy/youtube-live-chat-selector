@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill'
 import { readyStore } from '~/store'
 import iconOff from '~/assets/icon-off.png'
 import iconOn from '~/assets/icon-on.png'
@@ -13,7 +12,7 @@ const getSettings = async () => {
 
 const setIcon = async (tabId: number, enabled: boolean) => {
   const path = enabled ? iconOn : iconOff
-  await browser.pageAction.setIcon({ tabId, path })
+  await chrome.action.setIcon({ tabId, path })
 }
 
 const contentLoaded = async (tabId: number) => {
@@ -21,7 +20,6 @@ const contentLoaded = async (tabId: number) => {
   enabledStates = { ...enabledStates, [tabId]: enabled }
 
   await setIcon(tabId, enabled)
-  await browser.pageAction.show(tabId)
 
   const settings = await getSettings()
 
@@ -38,38 +36,44 @@ const menuButtonClicked = async (tabId: number) => {
 
   await setIcon(tabId, enabled)
 
-  await browser.tabs.sendMessage(tabId, {
-    id: 'enabledChanged',
+  await chrome.tabs.sendMessage(tabId, {
+    type: 'enabled-changed',
     data: { enabled },
   })
 }
 
 const settingsChanged = async () => {
   const settings = await getSettings()
-  const tabs = await browser.tabs.query({})
+  const tabs = await chrome.tabs.query({})
   for (const tab of tabs) {
     try {
       tab.id &&
-        (await browser.tabs.sendMessage(tab.id, {
-          id: 'settingsChanged',
+        chrome.tabs.sendMessage(tab.id, {
+          type: 'settings-changed',
           data: { settings },
-        }))
+        })
     } catch (e) {} // eslint-disable-line no-empty
   }
 }
 
-browser.runtime.onMessage.addListener(async (message, sender) => {
-  const { id } = message
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const { type } = message
   const { tab } = sender
-  switch (id) {
-    case 'contentLoaded':
-      return tab?.id && (await contentLoaded(tab.id))
-    case 'menuButtonClicked':
-      tab?.id && (await menuButtonClicked(tab.id))
-      break
-    case 'settingsChanged':
-      console.log('settingsChanged')
-      await settingsChanged()
-      break
+  switch (type) {
+    case 'content-loaded':
+      if (tab?.id) {
+        contentLoaded(tab.id).then((data) => sendResponse(data))
+        return true
+      }
+      return
+    case 'menu-button-clicked':
+      if (tab?.id) {
+        menuButtonClicked(tab.id).then(() => sendResponse())
+        return true
+      }
+      return
+    case 'settings-changed':
+      settingsChanged().then(() => sendResponse())
+      return true
   }
 })

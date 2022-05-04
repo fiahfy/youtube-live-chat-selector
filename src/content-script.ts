@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill'
 import { Settings } from '~/models'
 import playlistAddCheck from '~/assets/playlist-add-check.svg'
 
@@ -49,8 +48,8 @@ const addMenuButton = () => {
     'yt-live-chat-header-renderer'
   )
   iconButton.title = 'Select Messages'
-  iconButton.onclick = () => {
-    browser.runtime.sendMessage({ id: 'menuButtonClicked' })
+  iconButton.onclick = async () => {
+    await chrome.runtime.sendMessage({ type: 'menu-button-clicked' })
   }
   iconButton.append(icon)
 
@@ -100,23 +99,23 @@ const updateClasses = () => {
   }
 }
 
-browser.runtime.onMessage.addListener((message) => {
-  const { id, data } = message
-  switch (id) {
-    case 'enabledChanged':
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  const { type, data } = message
+  switch (type) {
+    case 'enabled-changed':
       enabled = data.enabled
       updateMenuButton()
       updateClasses()
-      break
-    case 'settingsChanged':
+      return sendResponse()
+    case 'settings-changed':
       settings = data.settings
       updateClasses()
-      break
+      return sendResponse()
   }
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await browser.runtime.sendMessage({ id: 'contentLoaded' })
+  const data = await chrome.runtime.sendMessage({ type: 'content-loaded' })
   enabled = data.enabled
   settings = data.settings
   addMenuButton()
