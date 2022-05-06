@@ -57,7 +57,7 @@
             />
           </div>
         </div>
-        <v-btn depressed small block @click="onClickReset"> Reset </v-btn>
+        <v-btn depressed small block @click="handleClickReset"> Reset </v-btn>
       </v-container>
     </v-main>
   </v-app>
