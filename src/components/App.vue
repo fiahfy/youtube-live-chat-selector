@@ -1,103 +1,110 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { Settings } from '~/models'
+import { useStore } from '~/store'
+
+const store = useStore()
+
+const enabledTypes = computed({
+  get: () =>
+    (
+      Object.keys(store.state.settings.types) as (keyof Settings['types'])[]
+    ).filter((type) => store.state.settings.types[type]),
+  set: (value) => {
+    const types = (
+      Object.keys(store.state.settings.types) as (keyof Settings['types'])[]
+    ).reduce((carry, type) => {
+      return {
+        ...carry,
+        [type]: value.includes(type),
+      }
+    }, {} as Settings['types'])
+    store.commit('settings/setTypes', { types })
+  },
+})
+
+const handleClickReset = () => store.commit('settings/reset')
+</script>
+
 <template>
   <v-app>
     <v-main class="fill-height">
       <v-container fluid>
-        <div class="d-flex">
-          <div class="mr-5">
+        <v-row>
+          <v-col cols="6">
             <v-switch
               v-model="enabledTypes"
               label="Guest"
               value="guest"
-              dense
-              class="mt-0"
+              color="primary"
+              density="compact"
+              hide-details
             />
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Member"
               value="member"
-              dense
-              class="mt-0"
             />
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Moderator"
               value="moderator"
-              dense
-              class="mt-0"
             />
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Owner"
               value="owner"
-              dense
-              class="mt-0"
             />
-          </div>
-          <div>
+          </v-col>
+          <v-col cols="6">
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Super Chat"
               value="super-chat"
-              dense
-              class="mt-0"
             />
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Super Sticker"
               value="super-sticker"
-              dense
-              class="mt-0"
             />
             <v-switch
               v-model="enabledTypes"
+              color="primary"
+              density="compact"
+              hide-details
               label="Membership"
               value="membership"
-              dense
-              class="mt-0"
             />
-          </div>
-        </div>
-        <v-btn depressed small block @click="handleClickReset"> Reset </v-btn>
+          </v-col>
+        </v-row>
+        <v-btn
+          block
+          class="mt-3"
+          size="small"
+          variant="contained-text"
+          @click="handleClickReset"
+        >
+          Reset
+        </v-btn>
       </v-container>
     </v-main>
   </v-app>
 </template>
-
-<script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-import { AuthorType, Types } from '~/models'
-import { settingsStore } from '~/store'
-
-export default defineComponent({
-  setup() {
-    const enabledTypes = computed({
-      get: () => {
-        return Object.keys(settingsStore.types).filter(
-          (type) => settingsStore.types[type as AuthorType]
-        )
-      },
-      set: (value) => {
-        const types = Object.keys(settingsStore.types).reduce((carry, type) => {
-          return {
-            ...carry,
-            [type]: value.includes(type),
-          }
-        }, {} as Types)
-        settingsStore.setTypes({ types })
-      },
-    })
-
-    const handleClickReset = () => {
-      settingsStore.reset()
-    }
-
-    return {
-      enabledTypes,
-      handleClickReset,
-    }
-  },
-})
-</script>
 
 <style lang="scss">
 html {
@@ -107,6 +114,6 @@ html {
 
 <style lang="scss" scoped>
 .v-application {
-  min-width: 320px;
+  min-width: 350px;
 }
 </style>
