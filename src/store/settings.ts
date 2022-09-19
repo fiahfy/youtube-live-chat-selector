@@ -1,10 +1,10 @@
-import { Module } from 'vuex'
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit'
 import { Settings } from '~/models'
-import { State as RootState } from '~/store'
+import { AppState } from '~/store'
 
-export type State = Settings
+type State = Settings
 
-const initialState: Settings = {
+export const initialState: State = {
   types: {
     guest: true,
     member: true,
@@ -16,15 +16,26 @@ const initialState: Settings = {
   },
 }
 
-export const module: Module<State, RootState> = {
-  namespaced: true,
-  state: () => ({ types: { ...initialState.types } }),
-  mutations: {
-    setTypes(state, { types }: { types: Settings['types'] }) {
-      state.types = types
+export const settingsSlice = createSlice({
+  name: 'settings',
+  initialState,
+  reducers: {
+    setTypes(state, action: PayloadAction<Settings['types']>) {
+      return { ...state, types: action.payload }
     },
     reset(state) {
-      state.types = { ...initialState.types }
+      return { ...state, types: initialState.types }
     },
   },
-}
+})
+
+export const { setTypes, reset } = settingsSlice.actions
+
+export default settingsSlice.reducer
+
+export const selectSettings = (state: AppState) => state.settings
+
+export const selectTypes = createSelector(
+  selectSettings,
+  (settings) => settings.types
+)
