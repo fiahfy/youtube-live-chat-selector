@@ -1,6 +1,6 @@
 # Chat Selector for YouTube Live
 
-![badge](https://github.com/fiahfy/youtube-live-chat-selector/workflows/Web%20Extension%20CI/badge.svg)
+![badge](https://github.com/fiahfy/youtube-live-chat-selector/workflows/Web%20Extension/badge.svg)
 
 > Chrome Extension for Selecting Chat Messages on YouTube Live.
 
@@ -15,10 +15,10 @@
 
 ## Installation
 
-1. Download `archive.zip` from [releases page](https://github.com/fiahfy/youtube-live-chat-selector/releases) and unzip this file.
+1. Download `extension.zip` from [releases page](https://github.com/fiahfy/youtube-live-chat-selector/releases) and unzip this file.
 2. Open the Extension Management page by navigating to `chrome://extensions`.
 3. Enable Developer Mode by clicking the toggle switch next to **Developer mode**.
-4. Click the **LOAD UNPACKED** button and select the unpacked directory named `app`.
+4. Click the **LOAD UNPACKED** button and select the unpacked directory named `dist`.
 
 ## Development
 

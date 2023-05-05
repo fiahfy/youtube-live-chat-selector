@@ -12,7 +12,7 @@ import { StoreProvider } from '~/contexts/StoreContext'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { reset, selectTypes, setTypes } from '~/store/settings'
 
-const InnerApp = () => {
+const App = () => {
   const types = useAppSelector(selectTypes)
   const dispatch = useAppDispatch()
 
@@ -108,7 +108,7 @@ const InnerApp = () => {
   )
 }
 
-const App = () => {
+const Popup = () => {
   return (
     <StoreProvider>
       <CssBaseline />
@@ -117,9 +117,9 @@ const App = () => {
           html: { overflowY: 'hidden', width: 330 },
         }}
       />
-      <InnerApp />
+      <App />
     </StoreProvider>
   )
 }
 
-export default App
+export default Popup

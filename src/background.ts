@@ -1,8 +1,8 @@
 import { Settings } from '~/models'
 import { persistConfig } from '~/store'
 import { initialState as initialSettings } from '~/store/settings'
-import iconOff from '~/assets/icon-off.png'
-import iconOn from '~/assets/icon-on.png'
+import icon from '/icon.png'
+import iconOn from '/icon-on.png'
 
 let initialEnabled = true
 let enabledStates: { [tabId: number]: boolean } = {}
@@ -19,7 +19,7 @@ const getSettings = async () => {
 }
 
 const setIcon = async (tabId: number, enabled: boolean) => {
-  const path = enabled ? iconOn : iconOff
+  const path = enabled ? iconOn : icon
   await chrome.action.setIcon({ tabId, path })
 }
 
