@@ -31,7 +31,7 @@ const updateMenuButton = () => {
 
 const addMenuButton = () => {
   const header = document.querySelector(
-    '#chat-messages > yt-live-chat-header-renderer'
+    '#chat-messages > yt-live-chat-header-renderer',
   )
   const refIconButton = header && header.querySelector('yt-live-chat-button')
   if (!header || !refIconButton) {
@@ -58,7 +58,7 @@ const addMenuButton = () => {
   liveChatButton.classList.add(
     ClassName.menuButton,
     'style-scope',
-    'yt-live-chat-header-renderer'
+    'yt-live-chat-header-renderer',
   )
   iconButton.title = 'Select Messages'
   iconButton.onclick = async () => {
