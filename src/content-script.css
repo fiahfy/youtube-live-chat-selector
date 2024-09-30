@@ -19,22 +19,22 @@ yt-live-chat-header-renderer > .ylcs-menu-button > button > yt-icon > svg {
 
 .ylcs-guest-hidden
   yt-live-chat-item-list-renderer
-  yt-live-chat-text-message-renderer[author-type=''] {
+  yt-live-chat-text-message-renderer[author-type=""] {
   display: none !important;
 }
 .ylcs-member-hidden
   yt-live-chat-item-list-renderer
-  yt-live-chat-text-message-renderer[author-type='member'] {
+  yt-live-chat-text-message-renderer[author-type="member"] {
   display: none !important;
 }
 .ylcs-moderator-hidden
   yt-live-chat-item-list-renderer
-  yt-live-chat-text-message-renderer[author-type='moderator'] {
+  yt-live-chat-text-message-renderer[author-type="moderator"] {
   display: none !important;
 }
 .ylcs-owner-hidden
   yt-live-chat-item-list-renderer
-  yt-live-chat-text-message-renderer[author-type='owner'] {
+  yt-live-chat-text-message-renderer[author-type="owner"] {
   display: none !important;
 }
 .ylcs-superchat-hidden

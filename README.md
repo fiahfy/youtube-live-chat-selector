@@ -1,6 +1,6 @@
 # Chat Selector for YouTube Live
 
-![badge](https://github.com/fiahfy/youtube-live-chat-selector/workflows/Create%20Release/badge.svg)
+[![Create Release](https://github.com/fiahfy/youtube-live-chat-selector/actions/workflows/create-release.yml/badge.svg)](https://github.com/fiahfy/youtube-live-chat-selector/actions/workflows/create-release.yml)
 
 > Chrome Extension for Selecting Chat Messages on YouTube Live.
 

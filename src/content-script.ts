@@ -1,5 +1,5 @@
-import { Settings } from '~/models'
 import playlistAddCheck from '~/assets/playlist-add-check.svg?raw'
+import type { Settings } from '~/models'
 import './content-script.css'
 
 const ClassName = {
@@ -33,7 +33,7 @@ const addMenuButton = () => {
   const header = document.querySelector(
     '#chat-messages > yt-live-chat-header-renderer',
   )
-  const refIconButton = header && header.querySelector('yt-live-chat-button')
+  const refIconButton = header?.querySelector('yt-live-chat-button')
   if (!header || !refIconButton) {
     return
   }
@@ -83,22 +83,22 @@ const addMenuButton = () => {
 }
 
 const updateClasses = () => {
-  if (enabled && !settings.types['guest']) {
+  if (enabled && !settings.types.guest) {
     document.body.classList.add(ClassName.guestHidden)
   } else {
     document.body.classList.remove(ClassName.guestHidden)
   }
-  if (enabled && !settings.types['member']) {
+  if (enabled && !settings.types.member) {
     document.body.classList.add(ClassName.memberHidden)
   } else {
     document.body.classList.remove(ClassName.memberHidden)
   }
-  if (enabled && !settings.types['moderator']) {
+  if (enabled && !settings.types.moderator) {
     document.body.classList.add(ClassName.moderatorHidden)
   } else {
     document.body.classList.remove(ClassName.moderatorHidden)
   }
-  if (enabled && !settings.types['owner']) {
+  if (enabled && !settings.types.owner) {
     document.body.classList.add(ClassName.ownerHidden)
   } else {
     document.body.classList.remove(ClassName.ownerHidden)
@@ -113,7 +113,7 @@ const updateClasses = () => {
   } else {
     document.body.classList.remove(ClassName.superStickerHidden)
   }
-  if (enabled && !settings.types['membership']) {
+  if (enabled && !settings.types.membership) {
     document.body.classList.add(ClassName.membershipHidden)
   } else {
     document.body.classList.remove(ClassName.membershipHidden)
